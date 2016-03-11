@@ -3,7 +3,7 @@
 
 """
 
- MoEDAL and CERN@school - ANN -> NBL.
+ MoEDAL and CERN@school - ANN -> NOD.
 
  See the README.md file and the GitHub wiki for more information.
 
@@ -30,13 +30,13 @@ if __name__ == "__main__":
 
     print("*")
     print("*====================================*")
-    print("* MoEDAL and CERN@school: ANN -> NBL *")
+    print("* MoEDAL and CERN@school: ANN -> NOD *")
     print("*====================================*")
     print("*")
 
     # Get the datafile path from the command line.
     parser = argparse.ArgumentParser()
-    parser.add_argument("dataPath",        help="Path to the input dataset.")
+    parser.add_argument("dataPath",       help="Path to the input dataset.")
     parser.add_argument("-v", "--verbose", help="Increase output verbosity", action="store_true")
     args = parser.parse_args()
 
@@ -52,10 +52,10 @@ if __name__ == "__main__":
     if not os.path.isdir(ann_path):
         raise IOError("* ERROR: '%s' does not exist - no annotation data!" % (ann_path))
 
-    ## The number of blobs data path.
-    nbl_path = os.path.join(data_path, "NBL")
-    if not os.path.isdir(nbl_path):
-        os.mkdir(nbl_path)
+    ## The number of oddities data path.
+    nod_path = os.path.join(data_path, "NOD")
+    if not os.path.isdir(nod_path):
+        os.mkdir(nod_path)
 
     # Set the logging level.
     if args.verbose:
@@ -64,15 +64,15 @@ if __name__ == "__main__":
         level=lg.INFO
 
     # Configure the logging.
-    lg.basicConfig(filename=os.path.join('./.', 'log_ann_to_nbl.log'), filemode='w', level=level)
+    lg.basicConfig(filename=os.path.join('./.', 'log_ann_to_nod.log'), filemode='w', level=level)
 
     lg.info(" *")
     lg.info(" *====================================*")
-    lg.info(" * MoEDAL and CERN@school: ANN -> NBL *")
+    lg.info(" * MoEDAL and CERN@school: ANN -> NOD *")
     lg.info(" *====================================*")
     lg.info(" *")
-    lg.info(" * Looking for annotations in             : '%s'" % (ann_path))
-    lg.info(" * Writing number of blobs information in : '%s'" % (nbl_path))
+    lg.info(" * Looking for annotations in                : '%s'" % (ann_path))
+    lg.info(" * Writing number of oddities information in : '%s'" % (nod_path))
     lg.info(" *")
 
     # Loop over the found annotations.
@@ -84,16 +84,16 @@ if __name__ == "__main__":
         ## The annotations found for the subject.
         annotations = ANN(ann_csv_path)
 
-        ## A dictionary of the number of blobs identified in each annotation.
+        ## A dictionary of the number of oddities identified in each annotation.
         #
-        # { anno_id:number of blobs identified}
-        num_blobs_dict = {}
+        # { anno_id:number of oddities identified}
+        num_oddities_dict = {}
 
         # Loop over the annotations found in the subject.
         for anno_id, anno in annotations.get_annotations().iteritems():
 
-            # Get the number of blobs identified from the annotation.
-            num_blobs = None
+            # Get the number of outer rings identified from the annotation.
+            num_oddities = None
 
             ## The annotation data
             d = json.loads(anno)
@@ -101,43 +101,43 @@ if __name__ == "__main__":
             # Loop over the task answers for this annotation.
             for entry in d:
 
-                if entry["task"] == "T2":
+                if entry["task"] == "T6":
 
-                    # Get the blob information from the annotation.
-                    blob_answer = entry["value"]
+                    # Get the oddity information from the annotation.
+                    oddity_answer = entry["value"]
 
-                    if blob_answer == "No.":
-                        num_blobs = 0
+                    if oddity_answer == "No.":
+                        num_oddities = 0
 
-                elif entry["task"] == "T3":
+                elif entry["task"] == "T7":
 
-                    # Get the blob information from the annotation.
-                    blob_info = entry["value"]
+                    # Get the oddity information from the annotation.
+                    oddity_info = entry["value"]
 
-                    # Add the number of blobs found in this annotation.
-                    num_blobs = len(blob_info)
+                    # Add the number of oddities found in this annotation.
+                    num_oddities = len(oddity_info)
 
-            num_blobs_dict[anno_id] = num_blobs
+            num_oddities_dict[anno_id] = num_oddities
 
-        # Write out the NBL CSV file.
-        ## The NBL CSV filename (and path).
-        nbl_csv_path = os.path.join(nbl_path, "%s.csv" % (sub_id))
+        # Write out the NOD CSV file.
+        ## The NOD CSV filename (and path).
+        nod_csv_path = os.path.join(nod_path, "%s.csv" % (sub_id))
         #
         ## The CSV file string to write out.
-        nbl_csv_s = "annotation_id,n_blobs_identified\n"
+        nod_csv_s = "annotation_id,n_oddities_identified\n"
         #
-        # Loop over the blob counts.
-        for i, anno_id in enumerate(sorted(num_blobs_dict)):
-            nbl_csv_s += "%s,%d" % (anno_id, num_blobs_dict[anno_id])
-            if i < len(num_blobs_dict): nbl_csv_s += "\n"
+        # Loop over the outer ring counts.
+        for i, anno_id in enumerate(sorted(num_oddities_dict)):
+            nod_csv_s += "%s,%d" % (anno_id, num_oddities_dict[anno_id])
+            if i < len(num_oddities_dict): nod_csv_s += "\n"
         #
         # Write out the CSV file.
-        with open(nbl_csv_path, "w") as nf:
-            nf.write(nbl_csv_s)
+        with open(nod_csv_path, "w") as nf:
+            nf.write(nod_csv_s)
 
         lg.info(" * Subject '%s' found in '%s': % 6d annotations." % (sub_id, ann_csv_path, annotations.get_number_of_annotations()))
 
-        print("* Converted '%s' -> '%s' (%d annotations)." % (ann_csv_path, nbl_csv_path, annotations.get_number_of_annotations()))
+        print("* Converted '%s' -> '%s' (%d annotations)." % (ann_csv_path, nod_csv_path, annotations.get_number_of_annotations()))
 
     lg.info(" *")
     print("*")

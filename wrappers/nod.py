@@ -10,13 +10,13 @@ from csvfile import CSVFile
 # For the frequency histogram.
 from plotting import FrequencyHistogram
 
-class NBL(CSVFile):
+class NOD(CSVFile):
     """
-    Wrapper class for the "Number of blobs identified" CSV file format.
+    Wrapper class for the "Number of oddities identified" CSV file format.
     """
     def __init__(self, path):
         """ Constructor. """
-        super(NBL, self).__init__(path)
+        super(NOD, self).__init__(path)
 
         ## A dictionary for the data.
         #
@@ -32,8 +32,8 @@ class NBL(CSVFile):
     def get_number_of_annotations(self):
         return self.get_number_of_entries()
 
-    def get_number_of_blobs_data(self):
+    def get_number_of_oddities_data(self):
         return self.__data_dict.values()
 
     def make_frequency_histogram(self, path):
-        self.__fh = FrequencyHistogram(self.__data_dict.values(), path, object_name="blob")
+        self.__fh = FrequencyHistogram(self.__data_dict.values(), path, object_name='odd object')

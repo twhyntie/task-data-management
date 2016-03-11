@@ -3,7 +3,7 @@
 
 """
 
- MoEDAL and CERN@school - ANN -> NBL.
+ MoEDAL and CERN@school - ANN -> ODD.
 
  See the README.md file and the GitHub wiki for more information.
 
@@ -30,7 +30,7 @@ if __name__ == "__main__":
 
     print("*")
     print("*====================================*")
-    print("* MoEDAL and CERN@school: ANN -> NBL *")
+    print("* MoEDAL and CERN@school: ANN -> ODD *")
     print("*====================================*")
     print("*")
 
@@ -52,10 +52,10 @@ if __name__ == "__main__":
     if not os.path.isdir(ann_path):
         raise IOError("* ERROR: '%s' does not exist - no annotation data!" % (ann_path))
 
-    ## The number of blobs data path.
-    nbl_path = os.path.join(data_path, "NBL")
-    if not os.path.isdir(nbl_path):
-        os.mkdir(nbl_path)
+    ## The oddity information data path.
+    odd_path = os.path.join(data_path, "ODD")
+    if not os.path.isdir(odd_path):
+        os.mkdir(odd_path)
 
     # Set the logging level.
     if args.verbose:
@@ -64,15 +64,15 @@ if __name__ == "__main__":
         level=lg.INFO
 
     # Configure the logging.
-    lg.basicConfig(filename=os.path.join('./.', 'log_ann_to_nbl.log'), filemode='w', level=level)
+    lg.basicConfig(filename=os.path.join('./.', 'log_ann_to_odd.log'), filemode='w', level=level)
 
     lg.info(" *")
     lg.info(" *====================================*")
-    lg.info(" * MoEDAL and CERN@school: ANN -> NBL *")
+    lg.info(" * MoEDAL and CERN@school: ANN -> ODD *")
     lg.info(" *====================================*")
     lg.info(" *")
-    lg.info(" * Looking for annotations in             : '%s'" % (ann_path))
-    lg.info(" * Writing number of blobs information in : '%s'" % (nbl_path))
+    lg.info(" * Looking for annotations in    : '%s'" % (ann_path))
+    lg.info(" * Writing oddity information in : '%s'" % (odd_path))
     lg.info(" *")
 
     # Loop over the found annotations.
@@ -84,60 +84,47 @@ if __name__ == "__main__":
         ## The annotations found for the subject.
         annotations = ANN(ann_csv_path)
 
-        ## A dictionary of the number of blobs identified in each annotation.
-        #
-        # { anno_id:number of blobs identified}
-        num_blobs_dict = {}
+        object_list = []
 
         # Loop over the annotations found in the subject.
         for anno_id, anno in annotations.get_annotations().iteritems():
 
-            # Get the number of blobs identified from the annotation.
-            num_blobs = None
-
-            ## The annotation data
+            ## The annotation data.
             d = json.loads(anno)
 
             # Loop over the task answers for this annotation.
             for entry in d:
 
-                if entry["task"] == "T2":
+                if entry["task"] == "T7":
 
-                    # Get the blob information from the annotation.
-                    blob_answer = entry["value"]
+                    # Get the object information from the annotation.
+                    object_info = entry["value"]
 
-                    if blob_answer == "No.":
-                        num_blobs = 0
+                    # Add an object for each object found.
+                    for object_i in object_info:
+                        x = object_i["x"]
+                        y = object_i["y"]
+                        object_list.append("%s,%.1f,%.1f" % (anno_id,x,y))
 
-                elif entry["task"] == "T3":
-
-                    # Get the blob information from the annotation.
-                    blob_info = entry["value"]
-
-                    # Add the number of blobs found in this annotation.
-                    num_blobs = len(blob_info)
-
-            num_blobs_dict[anno_id] = num_blobs
-
-        # Write out the NBL CSV file.
-        ## The NBL CSV filename (and path).
-        nbl_csv_path = os.path.join(nbl_path, "%s.csv" % (sub_id))
+        # Write out the ODD CSV file.
+        ## The ODD CSV filename (and path).
+        odd_csv_path = os.path.join(odd_path, "%s.csv" % (sub_id))
         #
         ## The CSV file string to write out.
-        nbl_csv_s = "annotation_id,n_blobs_identified\n"
+        odd_csv_s = "annotation_id,x,y\n"
         #
-        # Loop over the blob counts.
-        for i, anno_id in enumerate(sorted(num_blobs_dict)):
-            nbl_csv_s += "%s,%d" % (anno_id, num_blobs_dict[anno_id])
-            if i < len(num_blobs_dict): nbl_csv_s += "\n"
+        # Loop over the objects.
+        for i, object_string in enumerate(object_list):
+            odd_csv_s += object_string
+            if i < len(object_list): odd_csv_s += "\n"
         #
         # Write out the CSV file.
-        with open(nbl_csv_path, "w") as nf:
-            nf.write(nbl_csv_s)
+        with open(odd_csv_path, "w") as nf:
+            nf.write(odd_csv_s)
 
         lg.info(" * Subject '%s' found in '%s': % 6d annotations." % (sub_id, ann_csv_path, annotations.get_number_of_annotations()))
 
-        print("* Converted '%s' -> '%s' (%d annotations)." % (ann_csv_path, nbl_csv_path, annotations.get_number_of_annotations()))
+        print("* Converted '%s' -> '%s' (%d annotations)." % (ann_csv_path, odd_csv_path, annotations.get_number_of_annotations()))
 
     lg.info(" *")
     print("*")
