@@ -1,4 +1,4 @@
-<a name='top'>#The MoEDAL TASL Raw Scan Images: Metadata Schema</a>
+#<a name='top'>The MoEDAL TASL Raw Scan Images: Metadata Schema</a>
 
 
 ##Overview
@@ -30,6 +30,7 @@ The record ID.
 * _Field name_: `id`
 * _Format_: a string
 * _Required?_ Yes.
+
 _Back to the [top](#top)._
 
 ###<a name='batch_id'>Batch ID</a>
@@ -37,6 +38,7 @@ The ID of the batch to which the scan belongs.
 * _Field name_: `batch_id`
 * _Format_: a string
 * _Required?_ Yes.
+
 _Back to the [top](#top)._
 
 ###<a name='experiment'>Experiment</a>
@@ -44,6 +46,7 @@ The experiment to which the data belongs.
 * _Field name_: `experiment`
 * _Format_: a string
 * _Required?_ Yes.
+
 _Back to the [top](#top)._
 
 ###<a name='owner'>Owner</a>
@@ -51,6 +54,7 @@ The owner of the data.
 * _Field name_: `owner`
 * _Format_: a string
 * _Required?_ Yes.
+
 _Back to the [top](#top)._
 
 ###<a name='filename'>Filename</a>
@@ -58,6 +62,7 @@ The filename of the file represented by the record.
 * _Field name_: `filename`
 * _Format_: a posix compliant filename (string)
 * _Required?_ Yes.
+
 _Back to the [top](#top)._
 
 ###<a name='file_format'>File format</a>
@@ -65,6 +70,7 @@ The file format of the image.
 * _Field name_: `file_format`
 * _Format_: a string
 * _Required?_ Yes.
+
 _Back to the [top](#top)._
 
 ###<a name='data_format'>Data format</a>
@@ -72,6 +78,7 @@ The data format code (with respect to the data management plan).
 * _Field name_: `data_format`
 * _Format_: a three-letter string
 * _Required?_ Yes.
+
 _Back to the [top](#top)._
 
 ###<a name='image_width'>Image width</a>
@@ -80,6 +87,7 @@ The width of the image in pixels.
 * _Units_: pixels
 * _Format_: an integer
 * _Required?_ Yes.
+
 _Back to the [top](#top)._
 
 ###<a name='image_height'>Image height</a>
@@ -88,6 +96,7 @@ The height of the image in pixels.
 * _Units_: pixels
 * _Format_: an integer
 * _Required?_ Yes.
+
 _Back to the [top](#top)._
 
 ###<a name='file_size'>File size</a>
@@ -96,6 +105,7 @@ The size of the file represented by the record in bytes.
 * _Units_: bytes
 * _Format_: an integer
 * _Required?_ Yes.
+
 _Back to the [top](#top)._
 
 ###<a name='n_scan_rows'>Number of individual scan rows</a>
@@ -105,6 +115,7 @@ in the file.
 * _Field name_: `n_scan_rows`
 * _Format_: an integer
 * _Required?_ Yes.
+
 _Back to the [top](#top)._
 
 ###<a name='n_scan_columns'>Number of individual scan columns</a>
@@ -114,6 +125,7 @@ in the file.
 * _Field name_: `n_scan_columns`
 * _Format_: an integer
 * _Required?_ Yes.
+
 _Back to the [top](#top)._
 
 ###<a name='n_scans'>Number of individual scan images</a>
@@ -125,6 +137,7 @@ table is full.
 * _Field name_: `n_scans`
 * _Format_: an integer
 * _Required?_ Yes.
+
 _Back to the [top](#top)._
 
 ###<a name='magnification'>Scan magnification</a>
@@ -132,5 +145,6 @@ The magnification at which the scan was taken.
 * _Field name_: `magnification`
 * _Format_: a floating point number
 * _Required?_ Yes.
+
 _Back to the [top](#top)._
 
